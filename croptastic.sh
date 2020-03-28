@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 get_args(){
-    while getopts ":v:g:o:h" arg; do
+    while getopts ":v:g:o:f:s:h" arg; do
         case "$arg" in
             v)
                 type=0
@@ -18,6 +18,12 @@ get_args(){
             o)
                 output_f="${OPTARG}"
                 ;;
+            f)
+                fps="${OPTARG}"
+                ;;
+            s)
+                scale="${OPTARG}"
+                ;;
             \?) 
                 echo "Dawg"
                 exit
@@ -33,8 +39,12 @@ get_args(){
     fi
 
     # Default values.
-    fps=24
-    scale=320
+    if [[ $fps == "" ]]; then
+        fps=24
+    fi
+    if [[ $scale == "" ]]; then
+        scale=320
+    fi
     if [[ $output_f == "" ]]; then
         if [[ $type == 0 ]]; then
             output_f="$(date +"%Y-%m-%d_%H:%M:%S").mp4"
