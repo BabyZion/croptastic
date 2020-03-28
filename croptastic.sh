@@ -9,6 +9,14 @@ get_urls(){
     
 }
 
+if [[ $1 == *"://"* ]]; then
+    online_link=true
+    get_urls $1
+else
+    online_link=false
+    urls[0]=$1
+fi
+
 fps=30
 scale=500
 output="test.mp4"
