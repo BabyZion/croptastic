@@ -25,11 +25,22 @@ get_args(){
         esac
     done
 
-    if [ $start_url == ""] || [[ $start_url == "-"[v,g,o,h] ]] || [[ $output_f == "-"[v,g,o,h] ]]; then
+    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h] ]] || [[ $output_f == "-"[v,g,o,h] ]]; then
         echo ""
         echo "Error. Input URL must be specified."
         echo "Exiting"
         exit
+    fi
+
+    # Default values.
+    fps=24
+    scale=320
+    if [[ $output_f == "" ]]; then
+        if [[ $type == 0 ]]; then
+            output_f="$(date +"%Y-%m-%d_%H:%M:%S").mp4"
+        else
+            output_f="$(date +"%Y-%m-%d_%H:%M:%S").gif"
+        fi
     fi
 }
 
@@ -49,9 +60,6 @@ else
     online_link=false
     urls[0]=$1
 fi
-
-fps=30
-scale=500
 
 # Video - works
 # ffmpeg -ss 00:02 -i "${urls[0]}" -ss 00:02 -i "${urls[1]}" -map 0:v -map 1:a -ss 30 -t 01:00 -c:v libx264 -c:a aac test1.mp4 -y
