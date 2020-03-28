@@ -31,9 +31,11 @@ get_args(){
         esac
     done
 
-    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h] ]] || [[ $output_f == "-"[v,g,o,h] ]]; then
+    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h,f,s] ]] || \
+     [[ $output_f == "-"[v,g,o,h,f,s] ]] || [[ $fps == "-"[v,g,o,h,f,s] ]] || \
+     [[ $scale == "-"[v,g,o,h,f,s] ]]; then
         echo ""
-        echo "Error. Input URL must be specified."
+        echo "Bad parameters supplied."
         echo "Exiting"
         exit
     fi
