@@ -65,12 +65,12 @@ get_urls(){
 get_args $@
 load_default_values
 
-if [[ $1 == *"://"* ]]; then
+if [[ $start_url == *"://"* ]]; then
     online_link=true
-    get_urls $1
+    get_urls $start_url
 else
     online_link=false
-    urls[0]=$1
+    urls[0]=$start_url
 fi
 
 # Video - works
@@ -78,12 +78,12 @@ fi
 # Without skipping from the start.
 # ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[1]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac test5.mp4 -y
 if [ "$online_link" = true ]; then
-    ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[1]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac test5.mp4 -y
+    ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[1]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac ${output_f} -y
 else
-    ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[0]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac test5.mp4 -y
+    ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[0]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac ${output_f} -y
 fi
 
 # Gif -works
-ffmpeg -ss 00:00 -t 00:05 -i "${urls[0]}" -vf "fps=${fps},scale=${scale}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 gif_test.gif -y
+ffmpeg -ss 00:00 -t 00:05 -i "${urls[0]}" -vf "fps=${fps},scale=${scale}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ${output_f} -y
 
 
