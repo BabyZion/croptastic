@@ -1,13 +1,46 @@
 #!/usr/bin/bash
 
+get_args(){
+    while getopts ":v:g:o:h" arg; do
+        case "$arg" in
+            v)
+                type=0
+                start_url="${OPTARG}"
+                ;;
+            g)
+                type=1
+                start_url="${OPTARG}"
+                ;;
+            h)
+                echo "Dawg"
+                exit
+                ;;
+            o)
+                output_f="${OPTARG}"
+                ;;
+            \?) 
+                echo "Dawg"
+                exit
+                ;;
+        esac
+    done
+
+    if [ $start_url == ""] || [[ $start_url == "-"[v,g,o,h] ]] || [[ $output_f == "-"[v,g,o,h] ]]; then
+        echo ""
+        echo "Error. Input URL must be specified."
+        echo "Exiting"
+        exit
+    fi
+}
+
 get_urls(){
-    
     # Get youtube-dl urls into array.
     # 0 - Video stream.
     # 1 - Audio stream.
-    readarray -t urls <<<$(youtube-dl -g $1)
-    
+    readarray -t urls <<<$(youtube-dl -g $start_url)
 }
+
+get_args $@
 
 if [[ $1 == *"://"* ]]; then
     online_link=true
@@ -19,7 +52,6 @@ fi
 
 fps=30
 scale=500
-output="test.mp4"
 
 # Video - works
 # ffmpeg -ss 00:02 -i "${urls[0]}" -ss 00:02 -i "${urls[1]}" -map 0:v -map 1:a -ss 30 -t 01:00 -c:v libx264 -c:a aac test1.mp4 -y
