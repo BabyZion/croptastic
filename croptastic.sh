@@ -21,8 +21,6 @@ fps=30
 scale=500
 output="test.mp4"
 
-get_urls $1
-
 # Video - works
 ffmpeg -ss 03:02 -i "${urls[0]}" -ss 03:02 -i "${urls[1]}" -map 0:v -map 1:a -ss 30 -t 00:20 -c:v libx264 -c:a aac ${output} -y
 
