@@ -37,8 +37,9 @@ get_args(){
         echo "Exiting"
         exit
     fi
+}
 
-    # Default values.
+load_default_values(){
     if [[ $fps == "" ]]; then
         fps=24
     fi
@@ -62,6 +63,7 @@ get_urls(){
 }
 
 get_args $@
+load_default_values
 
 if [[ $1 == *"://"* ]]; then
     online_link=true
