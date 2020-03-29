@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 get_args(){
-    while getopts ":v:g:o:f:s:h" arg; do
+    while getopts ":v:g:o:f:s:hB:E:" arg; do
         case "$arg" in
             v)
                 type=0
@@ -24,6 +24,12 @@ get_args(){
             s)
                 scale="${OPTARG}"
                 ;;
+            B)  
+                begining="${OPTARG}"
+                ;;
+            T)
+                time="${OPTARG}"
+                ;;
             \?) 
                 help
                 exit
@@ -31,14 +37,23 @@ get_args(){
         esac
     done
 
-    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h,f,s] ]] || \
-     [[ $output_f == "-"[v,g,o,h,f,s] ]] || [[ $fps == "-"[v,g,o,h,f,s] ]] || \
-     [[ $scale == "-"[v,g,o,h,f,s] ]]; then
+    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h,f,s,B,T] ]] || \
+     [[ $output_f == "-"[v,g,o,h,f,s,B,T] ]] || [[ $fps == "-"[v,g,o,h,f,s,B,T] ]] || \
+     [[ $scale == "-"[v,g,o,h,f,s,B,T] ]] || [[ $begining == "-"[v,g,o,h,f,s,B,T] ]] || \
+     [[ $time == "-"[v,g,o,h,f,s,B,T] ]]; then
         echo ""
         echo "Bad parameters supplied."
         echo "Exiting"
         exit
     fi
+
+    if [[ $begining != [0-5][0-9]":"[0-5][0-9] ]] || [[ $time != [0-5][0-9]":"[0-5][0-9] ]]; then
+        # TODO: Implement check to see if end value comes before beginning.
+        echo "Wrong time format supplied."
+        echo "Exiting"
+        exit
+    fi
+
 }
 
 help(){
