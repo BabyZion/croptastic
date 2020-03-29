@@ -12,7 +12,7 @@ get_args(){
                 start_url="${OPTARG}"
                 ;;
             h)
-                echo "Dawg"
+                help
                 exit
                 ;;
             o)
@@ -25,7 +25,7 @@ get_args(){
                 scale="${OPTARG}"
                 ;;
             \?) 
-                echo "Dawg"
+                help
                 exit
                 ;;
         esac
@@ -39,6 +39,22 @@ get_args(){
         echo "Exiting"
         exit
     fi
+}
+
+help(){
+    echo "Usage $(basename "$0") [OPTIONS] URL [URL...]:"
+    echo ""
+    echo "Gif Options:"
+    echo "  -g              Create a .gif file from supplied URL."
+    echo "  -f              FPS of output .gif file."
+    echo "  -s              THe width of output .gif file."
+    echo ""
+    echo "Video Options:"
+    echo "  -v              Create a .mp4 file from supplied URL."
+    echo ""
+    echo "General Options:"
+    echo "  -o              Specifies output file for the .gif or .mp4 file."
+    echo "  -h              Displays this window."
 }
 
 load_default_values(){
