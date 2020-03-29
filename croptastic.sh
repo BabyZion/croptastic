@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 get_args(){
-    while getopts ":v:g:o:f:s:hB:E:" arg; do
+    while getopts ":v:g:o:f:s:B:T:h" arg; do
         case "$arg" in
             v)
                 type=0
@@ -48,7 +48,6 @@ get_args(){
     fi
 
     if [[ $begining != [0-5][0-9]":"[0-5][0-9] ]] || [[ $time != [0-5][0-9]":"[0-5][0-9] ]]; then
-        # TODO: Implement check to see if end value comes before beginning.
         echo "Wrong time format supplied."
         echo "Exiting"
         exit
@@ -112,11 +111,11 @@ fi
 # ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[1]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac test5.mp4 -y
 if [ $type == 0 ]; then
     if [ "$online_link" = true ]; then
-        ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[1]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac ${output_f} -y
+        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -c:v libx264 -c:a aac ${output_f} -y
     else
-        ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[0]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac ${output_f} -y
+        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[0]}" -map 0:v -map 1:a -t $time -c:v libx264 -c:a aac ${output_f} -y
     fi
 else
     # Gif -works
-    ffmpeg -ss 01:00 -t 00:05 -i "${urls[0]}" -vf "fps=${fps},scale=${scale}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ${output_f} -y
+    ffmpeg -ss $begining -t $time -i "${urls[0]}" -vf "fps=${fps},scale=${scale}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ${output_f} -y
 fi
