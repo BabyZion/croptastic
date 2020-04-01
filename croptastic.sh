@@ -29,9 +29,11 @@ get_args(){
                 ;;
             W)  
                 width="${OPTARG}"
+                let width="($width/2)*2"
                 ;;
             H)  
                 height="${OPTARG}"
+                let height="($height/2)*2"
                 ;;
             q)
                 good_quality="no"
@@ -82,12 +84,12 @@ load_default_values(){
         fps=24
     fi
     if [[ $width == "" ]] && [[ $height != "" ]]; then
-        width=-1
+        width=-2
     elif [[ $width != "" ]] && [[ $height == "" ]]; then
-        height=-1
+        height=-2
     elif [[ $width == "" ]] && [[ $height == "" ]]; then
-        width=-1
-        height=-1
+        width=-2
+        height=-2
     fi
     if [[ $output_f == "" ]]; then
         if [[ $type == 0 ]]; then
@@ -127,9 +129,9 @@ fi
 # ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[1]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac test5.mp4 -y
 if [ $type == 0 ]; then
     if [ "$online_link" = true ]; then
-        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -r ${fps} -c:v libx264 -c:a aac ${output_f} -y
+        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -r ${fps} -filter:v scale=${width}:${height} -c:v libx264 -c:a aac ${output_f} -y
     else
-        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[0]}" -map 0:v -map 1:a -t $time -r ${fps} -c:v libx264 -c:a aac ${output_f} -y
+        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[0]}" -map 0:v -map 1:a -t $time -r ${fps} -filter:v scale=${width}:${height} -c:v libx264 -c:a aac ${output_f} -y
     fi
 else
     # Gif -works
