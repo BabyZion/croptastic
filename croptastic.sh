@@ -127,9 +127,9 @@ fi
 # ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[1]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac test5.mp4 -y
 if [ $type == 0 ]; then
     if [ "$online_link" = true ]; then
-        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -c:v libx264 -c:a aac ${output_f} -y
+        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -r ${fps} -c:v libx264 -c:a aac ${output_f} -y
     else
-        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[0]}" -map 0:v -map 1:a -t $time -c:v libx264 -c:a aac ${output_f} -y
+        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[0]}" -map 0:v -map 1:a -t $time -r ${fps} -c:v libx264 -c:a aac ${output_f} -y
     fi
 else
     # Gif -works
