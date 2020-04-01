@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 get_args(){
-    while getopts ":v:g:o:f:W:H:B:T:h" arg; do
+    while getopts ":v:g:o:f:W:H:B:T:hq" arg; do
         case "$arg" in
             v)
                 type=0
@@ -33,6 +33,9 @@ get_args(){
             H)  
                 height="${OPTARG}"
                 ;;
+            q)
+                good_quality="no"
+                ;;
             \?) 
                 help
                 exit
@@ -40,10 +43,10 @@ get_args(){
         esac
     done
 
-    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h,f,B,T,W,H] ]] || \
-     [[ $output_f == "-"[v,g,o,h,f,B,T,W,H] ]] || [[ $fps == "-"[v,g,o,h,f,B,T,W,H] ]] || \
-     [[ $scale == "-"[v,g,o,h,f,B,T,W,H] ]] || [[ $begining == "-"[v,g,o,h,f,B,T,W,H] ]] || \
-     [[ $time == "-"[v,g,o,h,f,B,T,W,H] ]]; then
+    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h,f,B,T,W,H,q] ]] || \
+     [[ $output_f == "-"[v,g,o,h,f,B,T,W,H,q] ]] || [[ $fps == "-"[v,g,o,h,f,B,T,W,H,q] ]] || \
+     [[ $scale == "-"[v,g,o,h,f,B,T,W,H,q] ]] || [[ $begining == "-"[v,g,o,h,f,B,T,W,H,q] ]] || \
+     [[ $time == "-"[v,g,o,h,f,B,T,W,H,q] ]]; then
         echo ""
         echo "Bad parameters supplied."
         echo "Exiting"
@@ -93,6 +96,11 @@ load_default_values(){
             output_f="$(date +"%Y-%m-%d_%H:%M:%S").gif"
         fi
     fi
+    if [[ $good_quality == "no" ]]; then
+        color_pallet=""
+    else
+        color_pallet=":flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
+    fi
 }
 
 get_urls(){
@@ -125,5 +133,5 @@ if [ $type == 0 ]; then
     fi
 else
     # Gif -works
-    ffmpeg -ss $begining -t $time -i "${urls[0]}" -vf "fps=${fps},scale=${width}:${height}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ${output_f} -y
+    ffmpeg -ss $begining -t $time -i "${urls[0]}" -vf "fps=${fps},scale=${width}:${height}:-1${color_pallet}" -loop 0 ${output_f} -y
 fi
