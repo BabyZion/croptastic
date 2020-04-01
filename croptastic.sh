@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 get_args(){
-    while getopts ":v:g:o:f:s:B:T:h" arg; do
+    while getopts ":v:g:o:f:W:H:B:T:h" arg; do
         case "$arg" in
             v)
                 type=0
@@ -21,14 +21,17 @@ get_args(){
             f)
                 fps="${OPTARG}"
                 ;;
-            s)
-                scale="${OPTARG}"
-                ;;
             B)  
                 begining="${OPTARG}"
                 ;;
             T)
                 time="${OPTARG}"
+                ;;
+            W)  
+                width="${OPTARG}"
+                ;;
+            H)  
+                height="${OPTARG}"
                 ;;
             \?) 
                 help
@@ -37,10 +40,10 @@ get_args(){
         esac
     done
 
-    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h,f,s,B,T] ]] || \
-     [[ $output_f == "-"[v,g,o,h,f,s,B,T] ]] || [[ $fps == "-"[v,g,o,h,f,s,B,T] ]] || \
-     [[ $scale == "-"[v,g,o,h,f,s,B,T] ]] || [[ $begining == "-"[v,g,o,h,f,s,B,T] ]] || \
-     [[ $time == "-"[v,g,o,h,f,s,B,T] ]]; then
+    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h,f,B,T,W,H] ]] || \
+     [[ $output_f == "-"[v,g,o,h,f,B,T,W,H] ]] || [[ $fps == "-"[v,g,o,h,f,B,T,W,H] ]] || \
+     [[ $scale == "-"[v,g,o,h,f,B,T,W,H] ]] || [[ $begining == "-"[v,g,o,h,f,B,T,W,H] ]] || \
+     [[ $time == "-"[v,g,o,h,f,B,T,W,H] ]]; then
         echo ""
         echo "Bad parameters supplied."
         echo "Exiting"
@@ -75,8 +78,13 @@ load_default_values(){
     if [[ $fps == "" ]]; then
         fps=24
     fi
-    if [[ $scale == "" ]]; then
-        scale=320
+    if [[ $width == "" ]] && [[ $height != "" ]]; then
+        width=0
+    elif [[ $width != "" ]] && [[ $height == "" ]]; then
+        height=0
+    elif [[ $width != "" ]] && [[ $height == "" ]]; then
+        width=0
+        height=0
     fi
     if [[ $output_f == "" ]]; then
         if [[ $type == 0 ]]; then
@@ -117,5 +125,5 @@ if [ $type == 0 ]; then
     fi
 else
     # Gif -works
-    ffmpeg -ss $begining -t $time -i "${urls[0]}" -vf "fps=${fps},scale=${scale}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ${output_f} -y
+    ffmpeg -ss $begining -t $time -i "${urls[0]}" -vf "fps=${fps},scale=${width}:${height}:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ${output_f} -y
 fi
