@@ -82,7 +82,7 @@ load_default_values(){
         width=-1
     elif [[ $width != "" ]] && [[ $height == "" ]]; then
         height=-1
-    elif [[ $width != "" ]] && [[ $height == "" ]]; then
+    elif [[ $width == "" ]] && [[ $height == "" ]]; then
         width=-1
         height=-1
     fi
