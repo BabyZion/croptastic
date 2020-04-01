@@ -79,12 +79,12 @@ load_default_values(){
         fps=24
     fi
     if [[ $width == "" ]] && [[ $height != "" ]]; then
-        width=0
+        width=-1
     elif [[ $width != "" ]] && [[ $height == "" ]]; then
-        height=0
+        height=-1
     elif [[ $width != "" ]] && [[ $height == "" ]]; then
-        width=0
-        height=0
+        width=-1
+        height=-1
     fi
     if [[ $output_f == "" ]]; then
         if [[ $type == 0 ]]; then
