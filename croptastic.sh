@@ -55,7 +55,17 @@ get_args(){
         exit
     fi
 
-    if [[ $begining != [0-5][0-9]":"[0-5][0-9] ]] || [[ $time != [0-5][0-9]":"[0-5][0-9] ]]; then
+    declare -a formats=([0-5][0-9]":"[0-5][0-9] [0-5][0-9]":"[0-5][0-9]"."[0-9][0-9][0-9] [0-2][0-9]":"[0-5][0-9]":"[0-5][0-9] [0-2][0-9]":"[0-5][0-9]":"[0-5][0-9]"."[0-9][0-9][0-9])
+
+    good_format=false
+    for i in {0..3}
+    do
+        if [[ $begining == ${formats[i]} && $time == ${formats[i]} ]]; then
+            good_format=true
+            break
+        fi
+    done
+    if [[ $good_format == false ]]; then
         echo "Wrong time format supplied."
         echo "Exiting"
         exit
