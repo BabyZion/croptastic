@@ -100,8 +100,10 @@ load_default_values(){
     fi
     if [[ $good_quality == "no" ]]; then
         color_pallet=""
+        crf=30
     else
         color_pallet=":flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"
+        crf=23
     fi
 }
 
@@ -126,7 +128,7 @@ else
 fi
 
 if [ $type == 0 ]; then
-    ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -r ${fps} -filter:v scale=${width}:${height} -c:v libx264 -c:a aac ${output_f} -y
+    ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -r ${fps} -filter:v scale=${width}:${height} -c:v libx264 -crf ${crf} -c:a aac ${output_f} -y
 else
     ffmpeg -ss $begining -t $time -i "${urls[0]}" -vf "fps=${fps},scale=${width}:${height}:-1${color_pallet}" -loop 0 ${output_f} -y
 fi
