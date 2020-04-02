@@ -17,6 +17,13 @@ get_args(){
                 ;;
             o)
                 output_f="${OPTARG}"
+                if [[ $output_f != *".mp4" || $output_f != *".gif" ]]; then
+                    if [[ $type == 0 ]]; then
+                        output_f=$output_f".mp4"
+                    else
+                        output_f=$output_f".gif"
+                    fi
+                fi
                 ;;
             f)
                 fps="${OPTARG}"
