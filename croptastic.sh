@@ -116,24 +116,17 @@ get_args $@
 load_default_values
 
 if [[ $start_url == *"://"* ]]; then
-    online_link=true
     get_urls $start_url
-else
-    online_link=false
-    urls[0]=$start_url
-fi
-
-# Video - works
-# ffmpeg -ss 00:02 -i "${urls[0]}" -ss 00:02 -i "${urls[1]}" -map 0:v -map 1:a -ss 30 -t 01:00 -c:v libx264 -c:a aac test1.mp4 -y
-# Without skipping from the start.
-# ffmpeg -ss 00:00 -i "${urls[0]}" -ss 00:00 -i "${urls[1]}" -map 0:v -map 1:a -t 00:05 -c:v libx264 -c:a aac test5.mp4 -y
-if [ $type == 0 ]; then
-    if [ "$online_link" = true ]; then
-        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -r ${fps} -filter:v scale=${width}:${height} -c:v libx264 -c:a aac ${output_f} -y
-    else
-        ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[0]}" -map 0:v -map 1:a -t $time -r ${fps} -filter:v scale=${width}:${height} -c:v libx264 -c:a aac ${output_f} -y
+    if [[ ${urls[1]} == "" ]]; then
+        urls[1]=${urls[0]}
     fi
 else
-    # Gif -works
+    urls[0]=$start_url
+    urls[1]=${urls[0]}
+fi
+
+if [ $type == 0 ]; then
+    ffmpeg -ss $begining -i "${urls[0]}" -ss $begining -i "${urls[1]}" -map 0:v -map 1:a -t $time -r ${fps} -filter:v scale=${width}:${height} -c:v libx264 -c:a aac ${output_f} -y
+else
     ffmpeg -ss $begining -t $time -i "${urls[0]}" -vf "fps=${fps},scale=${width}:${height}:-1${color_pallet}" -loop 0 ${output_f} -y
 fi
