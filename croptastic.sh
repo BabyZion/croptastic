@@ -52,12 +52,38 @@ get_args(){
         esac
     done
 
-    if [[ $start_url == "" ]] || [[ $start_url == "-"[v,g,o,h,f,B,T,W,H,q] ]] || \
-     [[ $output_f == "-"[v,g,o,h,f,B,T,W,H,q] ]] || [[ $fps == "-"[v,g,o,h,f,B,T,W,H,q] ]] || \
-     [[ $scale == "-"[v,g,o,h,f,B,T,W,H,q] ]] || [[ $begining == "-"[v,g,o,h,f,B,T,W,H,q] ]] || \
-     [[ $time == "-"[v,g,o,h,f,B,T,W,H,q] ]]; then
-        echo ""
+    arg_type="switch"
+    for i in $@
+    do
+        if [[ $arg_type == "switch" ]]; then
+            if [[ $i == "-"[A-Za-z] ]] && [[ $i != "-"[q,h] ]]; then
+                arg_type="arg"
+            elif [[ $i == "-"[q,h] ]]; then
+                arg_type="switch"
+            else
+                echo "Bad parameters supplied."
+                echo "Exiting"
+                exit
+            fi
+        elif [[ $arg_type == "arg" ]]; then
+            if [[ $i != "-"[A-Za-z] ]]; then
+                arg_type="switch"
+            else
+                echo "Bad parameters supplied."
+                echo "Exiting"
+                exit
+            fi
+        fi
+    done
+    if [[ $arg_type == "arg" ]] && [[ ${@: -1} != "-"[q,h] ]]; then
         echo "Bad parameters supplied."
+        echo "Exiting"
+        exit
+    fi
+
+    if [[ $start_url == "" ]]; then
+        echo ""
+        echo "Input URL not supplied."
         echo "Exiting"
         exit
     fi
